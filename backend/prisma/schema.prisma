@@ -1,0 +1,815 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Supabase PostgreSQL — two URLs required:
+//   url       → connection pooler (port 6543, ?pgbouncer=true) — used at runtime
+//   directUrl → direct connection (port 5432)                  — used by Prisma CLI (migrate/seed)
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Institute {
+  id           String @id
+  name         String
+  nameHi       String
+  type         String // VAMNICOM | RICM | ICM
+  city         String
+  state        String
+  director     String
+  capacity     Int
+  contactEmail String
+  contactPhone String
+  activeCount  Int
+}
+
+model User {
+  id                     String  @id
+  name                   String
+  nameHi                 String?
+  email                  String  @unique
+  employeeId             String? @unique
+  passwordHash           String
+  phone                  String
+  role                   String  // trainee | institute_admin | super_admin | faculty | employer
+  languagePreference     String  @default("en")
+  instituteId            String?
+  cooperativeAffiliation String?
+  avatarUrl              String?
+  aadhaarMock            String?
+  isKycVerified          Boolean @default(false)
+  status                 String  @default("active")
+  eKycStatus             String  @default("NOT_VERIFIED")
+  rfidUid                String? @unique
+  faceEnrolled           Boolean @default(false)
+  faceIdentity           String? @unique
+
+  enrollments    Enrollment[]
+  attendance     AttendanceRecord[]
+  certificates   Certificate[]
+  jobInterests   JobInterest[]
+  notifications  AppNotification[]
+  chatMessages   ChatMessage[]
+  lessonProgress LessonProgress[]
+  quizAttempts   QuizAttempt[]
+  nominations            Nomination[]
+  publicProfile          TraineePublicProfile?
+  documents              UserDocument[]
+  programmeApplications  ProgrammeApplication[]
+}
+
+model Course {
+  id            String  @id
+  programmeId   String?
+  title         String
+  titleHi       String
+  titleMr       String
+  description   String
+  descriptionHi String
+  descriptionMr String
+  thumbnail     String
+  instituteId   String
+  durationHours Int
+  level         String  // Beginner | Intermediate | Advanced
+  category      String
+  modulesJson   Json    // Initial / static curriculum fallback
+
+  modules        Module[]
+  lessons        Lesson[]
+  quizzes        Quiz[]
+  enrollments    Enrollment[]
+  certificates   Certificate[]
+  lessonProgress LessonProgress[]
+  quizAttempts   QuizAttempt[]
+}
+
+model Module {
+  id            String   @id
+  courseId      String
+  orderIndex    Int      @default(1)
+  title         String
+  titleHi       String?
+  titleMr       String?
+  description   String?
+  descriptionHi String?
+  descriptionMr String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  course         Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lessons        Lesson[]
+  quizzes        Quiz[]
+  lessonProgress LessonProgress[]
+  quizAttempts   QuizAttempt[]
+}
+
+model Lesson {
+  id              String   @id
+  courseId        String
+  moduleId        String
+  orderIndex      Int      @default(1)
+  title           String
+  titleHi         String?
+  titleMr         String?
+  description     String?
+  descriptionHi   String?
+  descriptionMr   String?
+  contentType     String   @default("TEXT") // TEXT | VIDEO | PDF | LINK | MIXED
+  durationMinutes Int      @default(15)
+  contentEn       Json?    // { text: string, keyTakeaways: string[] }
+  contentHi       Json?    // { text: string, keyTakeaways: string[] }
+  contentMr       Json?    // { text: string, keyTakeaways: string[] }
+  videoUrl        String?
+  videoProvider   String   @default("youtube")
+  isRequired      Boolean  @default(true)
+  attachmentUrl   String?
+  resourceUrl     String?
+  isPublished     Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  course   Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  module   Module           @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  progress LessonProgress[]
+}
+
+model Quiz {
+  id            String   @id
+  courseId      String
+  moduleId      String
+  title         String
+  titleHi       String?
+  titleMr       String?
+  description   String?
+  passThreshold Int      @default(75)
+  isPublished   Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  course       Course         @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  module       Module         @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  questions    QuizQuestion[]
+  quizAttempts QuizAttempt[]
+}
+
+model QuizQuestion {
+  id             String   @id
+  quizId         String
+  orderIndex     Int      @default(1)
+  questionText   String
+  questionTextHi String?
+  questionTextMr String?
+  explanationEn  String?
+  explanationHi  String?
+  explanationMr  String?
+  createdAt      DateTime @default(now())
+
+  quiz           Quiz                @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  options        QuizOption[]
+  attemptAnswers QuizAttemptAnswer[]
+}
+
+model QuizOption {
+  id           String   @id
+  questionId   String
+  optionIndex  Int      @default(0)
+  optionText   String
+  optionTextHi String?
+  optionTextMr String?
+  isCorrect    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+
+  question       QuizQuestion        @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  attemptAnswers QuizAttemptAnswer[]
+}
+
+model Enrollment {
+  id                   String    @id
+  userId               String
+  courseId             String
+  progressPercent      Int       @default(0)
+  completedLessonIds   Json      @default("[]")
+  completedQuizIds     Json      @default("[]")
+  lastAccessedLessonId String?
+  status               String    @default("ENROLLED") // ENROLLED | IN_PROGRESS | COMPLETED
+  enrolledDate         String
+  startedAt            DateTime?
+  completedAt          DateTime?
+  completionDate       String?
+  certificateId        String?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @default(now()) @updatedAt
+
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course         Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lessonProgress LessonProgress[]
+  quizAttempts   QuizAttempt[]
+
+  @@unique([userId, courseId])
+}
+
+model LessonProgress {
+  id              String    @id
+  enrollmentId    String
+  courseId        String
+  moduleId        String
+  lessonId        String
+  userId          String
+  status          String    @default("NOT_STARTED") // NOT_STARTED | IN_PROGRESS | COMPLETED
+  progressSeconds Int       @default(0)
+  progressPercent Int       @default(0)
+  completed       Boolean   @default(false)
+  startedAt       DateTime?
+  completedAt     DateTime?
+  lastWatchedAt   DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  enrollment Enrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+  course     Course     @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  module     Module     @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  lesson     Lesson     @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([enrollmentId, lessonId])
+  @@unique([userId, lessonId])
+}
+
+model QuizAttempt {
+  id             String    @id
+  quizId         String
+  courseId       String
+  moduleId       String
+  userId         String
+  enrollmentId   String
+  score          Int       @default(0)
+  totalQuestions Int       @default(0)
+  correctAnswers Int       @default(0)
+  percentage     Int       @default(0)
+  passed         Boolean   @default(false)
+  attemptNumber  Int       @default(1)
+  startedAt      DateTime  @default(now())
+  submittedAt    DateTime?
+  createdAt      DateTime  @default(now())
+
+  quiz       Quiz                @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  course     Course              @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  module     Module              @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  user       User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  enrollment Enrollment          @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+  answers    QuizAttemptAnswer[]
+}
+
+model QuizAttemptAnswer {
+  id               String   @id
+  attemptId        String
+  questionId       String
+  selectedOptionId String
+  isCorrect        Boolean  @default(false)
+  createdAt        DateTime @default(now())
+
+  attempt  QuizAttempt  @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  question QuizQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  option   QuizOption   @relation(fields: [selectedOptionId], references: [id], onDelete: Cascade)
+
+  @@unique([attemptId, questionId])
+}
+
+model Session {
+  id                 String    @id
+  programmeId        String
+  batchId            String?
+  courseId           String?
+  title              String
+  instructor         String
+  facultyId          String?
+  date               String
+  timeSlot           String
+  room               String
+  capacity           Int?      @default(40)
+  classroomId        String?   @default("A101")
+  attendanceMode     String?   @default("FACE_RFID") // FACE_RFID | Face Recognition | QR
+  qrToken            String    @unique
+  qrExpiresAt        DateTime?
+  active             Boolean   @default(false)
+  instituteId        String    @default("inst-vamnicom")
+  sessionMode        String?   @default("PHYSICAL") // PHYSICAL | HYBRID
+  sessionType        String?   @default("LECTURE") // LECTURE | LAB | FIELD_VISIT | GUEST_LECTURE | WORKSHOP | ASSESSMENT
+  attendanceRequired Boolean   @default(true)
+  attendanceOpenAt   DateTime?
+  attendanceCloseAt  DateTime?
+  meetingUrl         String?
+  notes              String?
+  deviceId           String?
+  createdAt          DateTime  @default(now())
+
+  programme          Programme?         @relation(fields: [programmeId], references: [id], onDelete: Cascade)
+  batch              Batch?             @relation(fields: [batchId], references: [id], onDelete: SetNull)
+  attendance         AttendanceRecord[]
+}
+
+model AttendanceDevice {
+  id          String   @id @default(cuid())
+  deviceCode  String   @unique
+  classroomId String
+  name        String
+  status      String   @default("ONLINE")
+  lastSeenAt  DateTime @default(now())
+  instituteId String   @default("inst-vamnicom")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model AttendanceRecord {
+  id              String  @id
+  sessionId       String
+  userId          String
+  traineeName     String
+  traineeCoop     String
+  method          String  // qr | face | manual
+  timestamp       String
+  confidenceScore Float?
+  deviceLocation  String?
+  status          String  @default("PRESENT")
+
+  user    User    @relation(fields: [userId], references: [id])
+  session Session @relation(fields: [sessionId], references: [id])
+
+  @@unique([sessionId, userId])
+}
+
+model Certificate {
+  id                String   @id
+  certificateNumber String?  @unique
+  userId            String
+  userName          String
+  userAadhaarMock   String?
+  courseId          String
+  enrollmentId      String?
+  courseTitle       String
+  courseTitleHi     String?
+  instituteId       String
+  instituteName     String
+  issueDate         String   @default("")
+  completionDate    String?
+  issuedDate        String   @default("") // backwards compatibility
+  certificateHash   String
+  verificationToken String?  @unique
+  qrCodeData        String?
+  status            String   @default("ISSUED") // ISSUED | VALID | REVOKED
+  grade             String   @default("Passed") // Distinction | First Class | Passed
+  createdAt         DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+}
+
+model JobPosting {
+  id                    String  @id
+  employerId            String
+  employerName          String
+  employerLogo          String?
+  title                 String
+  description           String
+  requiredSkills        Json    // string[]
+  preferredSkills       Json    @default("[]") // string[]
+  requiredQualification String  @default("Graduation / Diploma")
+  minimumExperience     Int     @default(0)
+  requiredCertificates  Json    @default("[]") // string[]
+  location              String
+  salaryRange           String
+  type                  String  // Full-time | Apprenticeship | Contract
+  postedDate            String
+  openingsCount         Int
+  status                String  @default("ACTIVE") // ACTIVE | CLOSED
+
+  interests JobInterest[]
+}
+
+model JobInterest {
+  id                   String   @id
+  jobPostingId         String
+  userId               String
+  traineeName          String
+  traineeEmail         String
+  traineeSkills        Json     // string[]
+  matchedSkills        Json     @default("[]") // string[]
+  missingSkills        Json     @default("[]") // string[]
+  matchScore           Int      @default(0)
+  eligibilityStatus    String   @default("ELIGIBLE") // ELIGIBLE | NOT_ELIGIBLE
+  ineligibilityReasons Json     @default("[]") // string[]
+  timestamp            String
+  appliedAt            DateTime @default(now())
+  status               String   @default("APPLIED") // APPLIED | UNDER_REVIEW | SHORTLISTED | INTERVIEW | SELECTED | REJECTED
+
+  user User       @relation(fields: [userId], references: [id])
+  job  JobPosting @relation(fields: [jobPostingId], references: [id])
+
+  @@unique([jobPostingId, userId])
+}
+
+model AppNotification {
+  id         String   @id
+  userId     String
+  title      String
+  message    String
+  timestamp  String
+  isRead     Boolean  @default(false)
+  type       String   // certificate | job | course | attendance | system
+  linkView   String?
+  linkParams Json?
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model ChatMessage {
+  id        String   @id @default(cuid())
+  userId    String
+  role      String   // user | assistant
+  content   String
+  timestamp DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model TraineePublicProfile {
+  id                      String   @id @default(cuid())
+  userId                  String   @unique
+  publicToken             String   @unique
+  registrationId          String?  @default("NCCT-TRN-2026-MH-44091")
+  qualification           String?  @default("Graduate (B.Com)")
+  education               String?  @default("Bachelor Degree in Commerce (B.Com)")
+  location                String?  @default("Anand, Gujarat")
+  experienceYears         Float    @default(1.0)
+  preferredLocation       String?  @default("Gujarat")
+  preferredEmploymentType String?  @default("Full-time")
+  availability            String?  @default("Immediate")
+  skills                  Json?    @default("[]")
+  isActive                Boolean  @default(true)
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+
+  user                    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ProgrammeType {
+  id          String      @id @default(cuid())
+  code        String      @unique // PGDM | DCBM | HDCM | SECTORAL_DIPLOMA | MDP | SHORT_TERM | AWARENESS | SEMINAR | WORKSHOP | WEBINAR
+  name        String
+  description String?
+  active      Boolean     @default(true)
+  programmes  Programme[]
+}
+
+model Programme {
+  id                      String   @id
+  programmeTypeId         String?
+  title                   String
+  titleHi                 String?
+  titleMr                 String?
+  instituteId             String   @default("inst-vamnicom")
+  academicYear            String?  @default("2026-2027")
+  startDate               String
+  endDate                 String
+  durationValue           Int?     @default(12)
+  durationUnit            String?  @default("WEEKS") // WEEKS | MONTHS | DAYS | YEARS
+  deliveryMode            String?  @default("ON_SITE") // ON_SITE | BLENDED | CORRESPONDENCE_WITH_CONTACT_CLASSES | SHORT_TERM_ON_SITE | FULLY_ONLINE
+  studyPattern            String?  @default("FULL_TIME") // FULL_TIME | PART_TIME | MODULAR
+  attendanceMode          String?  @default("BIOMETRIC_FACE_RFID") // BIOMETRIC_FACE_RFID | MANUAL
+  assessmentMode          String?  @default("EXAM") // EXAM | PROJECT | CONTINUOUS | NONE
+  hostelStatus            String?  @default("OPTIONAL") // MANDATORY | OPTIONAL | NOT_AVAILABLE
+  hostelFee               Float?   @default(0)
+  fee                     Float?   @default(0)
+  applicationDeadline     DateTime?
+  officialNotificationUrl String?
+  learningOutcomes        Json?    @default("[]")
+  mode                    String   @default("residential") // legacy compatibility
+  capacity                Int      @default(30)
+  enrolledCount           Int      @default(0)
+  category                String
+  description             String
+  status                  String   @default("active") // active | completed | upcoming | draft | archived | cancelled
+  courseId                String?
+  facultyId               String?
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+
+  programmeType           ProgrammeType?            @relation(fields: [programmeTypeId], references: [id])
+  batches                 Batch[]
+  eligibilityRule         ProgrammeEligibilityRule?
+  applications            ProgrammeApplication[]
+  nominations             Nomination[]
+  timetable               TimetableEntry[]
+  hostelBeds              HostelBed[]
+  sessions                Session[]
+}
+
+model ProgrammeEligibilityRule {
+  id                    String    @id @default(cuid())
+  programmeId           String    @unique
+  minimumQualification  String?   @default("Graduation") // Graduation | 10+2 | Post Graduation | Any
+  minimumPercentage     Float?    @default(50.0)
+  experienceRequired    Boolean   @default(false)
+  experienceYears       Float?    @default(0)
+  minimumAge            Int?
+  maximumAge            Int?
+  entranceRequired      Boolean   @default(false)
+  interviewRequired     Boolean   @default(false)
+  requiredDocuments     Json?     @default("[\"AADHAAR\",\"GRADUATION_DEGREE\"]")
+  targetGroup           String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  programme             Programme @relation(fields: [programmeId], references: [id], onDelete: Cascade)
+}
+
+model Batch {
+  id            String                 @id @default(cuid())
+  programmeId   String
+  name          String                 // e.g. "Batch 2026-A"
+  startDate     String
+  endDate       String
+  capacity      Int                    @default(30)
+  enrolledCount Int                    @default(0)
+  room          String?                @default("Lecture Hall 1")
+  classroomId   String?                @default("A101")
+  kioskId       String?                @default("kiosk-pi-01")
+  facultyId     String?                @default("usr-faculty-1")
+  status        String                 @default("ACTIVE") // UPCOMING | ACTIVE | COMPLETED | CANCELLED
+  createdAt     DateTime               @default(now())
+  updatedAt     DateTime               @updatedAt
+
+  programme     Programme              @relation(fields: [programmeId], references: [id], onDelete: Cascade)
+  sessions      Session[]
+  applications  ProgrammeApplication[]
+}
+
+model TimeSlot {
+  id            String   @id @default(cuid())
+  institutionId String   @default("inst-vamnicom")
+  name          String   // e.g. "Morning Slot 1"
+  startTime     String   // e.g. "09:30"
+  endTime       String   // e.g. "11:00"
+  slotType      String   @default("LECTURE") // LECTURE | LAB | INTERACTIVE | TEA_BREAK | LUNCH
+  active        Boolean  @default(true)
+}
+
+model UserDocument {
+  id                 String                @id @default(cuid())
+  userId             String
+  documentType       String                // AADHAAR | PAN | 10TH_MARKSHEET | 12TH_MARKSHEET | GRADUATION_DEGREE | POST_GRADUATION | EXPERIENCE_CERT | COOP_SPONSOR_LETTER | COMMUNITY_CERT | OTHER
+  fileName           String
+  filePath           String
+  fileSize           Int?                  @default(102400)
+  mimeType           String?               @default("application/pdf")
+  verificationStatus String                @default("VERIFIED") // PENDING | VERIFIED | REJECTED
+  verifiedBy         String?
+  verifiedAt         DateTime?
+  rejectionReason    String?
+  expiryDate         DateTime?
+  metadata           Json?                 @default("{}")
+  createdAt          DateTime              @default(now())
+  updatedAt          DateTime              @updatedAt
+
+  user               User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  applicationDocs    ApplicationDocument[]
+
+  @@unique([userId, documentType])
+}
+
+model ProgrammeApplication {
+  id                  String                @id @default(cuid())
+  programmeId         String
+  userId              String
+  batchId             String?
+  status              String                @default("SUBMITTED") // DRAFT | SUBMITTED | UNDER_REVIEW | ELIGIBLE | INELIGIBLE | APPROVED | REJECTED | ENROLLED
+  eligibilityResult   String?               @default("ELIGIBLE") // ELIGIBLE | CONDITIONALLY_ELIGIBLE | INELIGIBLE
+  ineligibilityReason String?
+  appliedAt           DateTime              @default(now())
+  reviewedAt          DateTime?
+  reviewedBy          String?
+  hostelRequired      Boolean               @default(false)
+  hostelStatus        String?               @default("NOT_REQUESTED") // NOT_REQUESTED | REQUESTED | ALLOCATED | WAITLISTED | REJECTED
+  notes               String?
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+
+  programme           Programme             @relation(fields: [programmeId], references: [id], onDelete: Cascade)
+  user                User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  batch               Batch?                @relation(fields: [batchId], references: [id], onDelete: SetNull)
+  consentedDocs       ApplicationDocument[]
+
+  @@unique([programmeId, userId])
+}
+
+model ApplicationDocument {
+  id             String               @id @default(cuid())
+  applicationId  String
+  documentId     String
+  consented      Boolean              @default(true)
+  reviewStatus   String               @default("ACCEPTED") // PENDING | ACCEPTED | DEFICIENT
+  deficiencyNote String?
+  createdAt      DateTime             @default(now())
+
+  application    ProgrammeApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  document       UserDocument         @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@unique([applicationId, documentId])
+}
+
+model Nomination {
+  id              String   @id
+  programmeId     String
+  userId          String?
+  traineeName     String
+  traineeEmail    String
+  cooperativeName String
+  status          String   @default("pending") // pending | approved | rejected
+  nominatedDate   String
+  rejectionReason String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  programme       Programme @relation(fields: [programmeId], references: [id], onDelete: Cascade)
+  user            User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+}
+
+model HostelBed {
+  id          String   @id
+  roomNumber  String
+  bedNumber   String
+  block       String   // Block A (Men) | Block B (Women) | Executive Guest Block
+  programmeId String
+  instituteId String   @default("inst-vamnicom")
+  traineeId   String?
+  traineeName String?
+  status      String   @default("vacant") // occupied | vacant | maintenance
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  programme   Programme @relation(fields: [programmeId], references: [id], onDelete: Cascade)
+}
+
+model TimetableEntry {
+  id          String   @id
+  programmeId String
+  instituteId String   @default("inst-vamnicom")
+  day         String   // Monday | Tuesday | Wednesday | Thursday | Friday | Saturday
+  timeSlot    String
+  subject     String
+  facultyName String
+  venue       String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  programme   Programme @relation(fields: [programmeId], references: [id], onDelete: Cascade)
+}
+
+// ─── HOSTEL MODULE ENTERPRISE DATABASE SCHEMA ──────────────────────────────
+
+model Hostel {
+  id            String   @id @default(cuid())
+  institutionId String   @default("inst-vamnicom")
+  name          String   // e.g. "VAMNICOM Residential Hostel Complex"
+  address       String?
+  status        String   @default("active")
+  contactPerson String?  // Warden name
+  contactPhone  String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @default(now()) @updatedAt
+
+  blocks        HostelBlock[]
+  complaints    HostelComplaint[]
+}
+
+model HostelBlock {
+  id          String   @id @default(cuid())
+  hostelId    String
+  name        String   // "Block A (Men)", "Block B (Women)", "Executive Guest Block"
+  floorCount  Int      @default(3)
+  category    String   @default("Co-ed") // Men | Women | Co-ed | Executive | VIP
+  status      String   @default("active")
+  wardenName  String?
+  wardenPhone String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+
+  hostel      Hostel       @relation(fields: [hostelId], references: [id], onDelete: Cascade)
+  rooms       HostelRoom[]
+}
+
+model HostelRoom {
+  id         String   @id @default(cuid())
+  blockId    String
+  roomNumber String   // "101", "102", "201"
+  floor      Int      @default(1)
+  roomType   String   @default("Double") // Single | Double | Triple | Dormitory
+  capacity   Int      @default(2)
+  status     String   @default("AVAILABLE") // AVAILABLE | FULL | PARTIALLY_OCCUPIED | MAINTENANCE | BLOCKED
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+
+  block      HostelBlock       @relation(fields: [blockId], references: [id], onDelete: Cascade)
+  beds       HostelBedRecord[]
+  complaints HostelComplaint[]
+
+  @@unique([blockId, roomNumber])
+}
+
+model HostelBedRecord {
+  id                  String   @id @default(cuid())
+  roomId              String
+  bedNumber           String   // "Bed 1", "Bed 2"
+  status              String   @default("available") // available | occupied | maintenance | reserved
+  currentOccupantId   String?
+  currentOccupantName String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @default(now()) @updatedAt
+
+  room                HostelRoom         @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  allocations         HostelAllocation[]
+
+  @@unique([roomId, bedNumber])
+}
+
+model HostelRequest {
+  id                  String   @id @default(cuid())
+  traineeId           String
+  programmeId         String
+  institutionId       String   @default("inst-vamnicom")
+  required            Boolean  @default(true)
+  requestedFrom       String?
+  requestedTo         String?
+  status              String   @default("SUBMITTED") // NOT_REQUESTED | SUBMITTED | UNDER_REVIEW | APPROVED | ALLOCATED | WAITLISTED | REJECTED | CANCELLED | CHECKED_IN | CHECKED_OUT
+  priority            Int      @default(50) // 0-100
+  priorityReason      String?
+  specialRequirements String?
+  roomTypePreference  String?  @default("Double")
+  foodPreference      String?  @default("Veg") // Veg | Non-Veg | Jain | Standard
+  emergencyContact    String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @default(now()) @updatedAt
+
+  allocations         HostelAllocation[]
+}
+
+model HostelAllocation {
+  id                 String    @id @default(cuid())
+  requestId          String?
+  traineeId          String
+  traineeName        String
+  traineeEmail       String?
+  traineePhone       String?
+  traineeCoop        String?
+  programmeId        String
+  programmeTitle     String?
+  blockId            String
+  blockName          String
+  roomId             String
+  roomNumber         String
+  bedId              String
+  bedNumber          String
+  allocatedFrom      String
+  allocatedTo        String?
+  status             String    @default("ALLOCATED") // RESERVED | ALLOCATED | CHECKED_IN | TRANSFERRED | CHECKED_OUT | CANCELLED
+  checkedInAt        DateTime?
+  checkedOutAt       DateTime?
+  identityVerifiedBy String?
+  verificationMethod String?   @default("NFC")
+  notes              String?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @default(now()) @updatedAt
+
+  request            HostelRequest?   @relation(fields: [requestId], references: [id], onDelete: SetNull)
+  bed                HostelBedRecord  @relation(fields: [bedId], references: [id], onDelete: Cascade)
+}
+
+model HostelComplaint {
+  id                String    @id @default(cuid())
+  traineeId         String
+  traineeName       String
+  hostelId          String?
+  blockName         String?
+  roomId            String?
+  roomNumber        String?
+  category          String    @default("Electrical") // Electrical | Water | Cleaning | Food | Room | Safety | Internet | Other
+  title             String
+  description       String
+  priority          String    @default("medium") // low | medium | high | urgent
+  status            String    @default("OPEN") // OPEN | ASSIGNED | IN_PROGRESS | RESOLVED | REOPENED | CLOSED
+  assignedTo        String?
+  assignedStaffName String?
+  resolutionNotes   String?
+  photoUrl          String?
+  createdAt         DateTime  @default(now())
+  resolvedAt        DateTime?
+
+  hostel            Hostel?     @relation(fields: [hostelId], references: [id], onDelete: SetNull)
+  room              HostelRoom? @relation(fields: [roomId], references: [id], onDelete: SetNull)
+}
+
+

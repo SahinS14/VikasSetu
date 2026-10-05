@@ -1,0 +1,28 @@
+.text-type-container {
+  display: inline-block;
+  white-space: pre-wrap;
+  position: relative;
+}
+
+.text-type-cursor {
+  display: inline-block;
+  margin-left: 2px;
+  font-weight: 300;
+  color: #E98A28;
+  opacity: 1;
+  transition: opacity 0.1s ease;
+  user-select: none;
+}
+
+@keyframes textTypeBlinkAnimation {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.text-type-cursor-blink {
+  animation: textTypeBlinkAnimation var(--cursor-blink-duration, 0.5s) infinite;
+}
