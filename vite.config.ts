@@ -7,6 +7,11 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
+      // A deployment must always serve the current application bundle. The
+      // previous worker retained old role/API code across releases, so PWA
+      // caching is disabled until an update flow with explicit user prompts is
+      // introduced.
+      disable: true,
       registerType: 'autoUpdate',
       // Use the external manifest.webmanifest we created in public/
       manifest: false,
