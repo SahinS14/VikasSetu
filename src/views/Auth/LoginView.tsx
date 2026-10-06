@@ -29,7 +29,7 @@ import TextType from '../../components/TextType/TextType';
 // 1. TOP GOVERNMENT BAR (Height 28-30px, Background #005B46, Centered ~1200px)
 // =========================================================================
 export const GovernmentBar: React.FC<{ onVerifyClick: () => void }> = ({ onVerifyClick }) => (
-  <div className="bg-[#005B46] text-white text-[11px] sm:text-[12px] min-h-[30px] select-none z-30 flex items-center w-full border-b border-[#004d3b] py-1 sm:py-0">
+  <div className="bg-[#504CB8] text-white text-[11px] sm:text-[12px] min-h-[30px] select-none z-30 flex items-center w-full border-b border-[#403C95] py-1 sm:py-0">
     <div className="w-full max-w-[1220px] px-3 sm:px-4 mx-auto flex items-center justify-between gap-x-2 gap-y-1 flex-wrap">
       {/* Left: Ashoka Emblem + Government of India & Ministry */}
       <div className="flex items-center gap-1.5 sm:gap-2 font-medium tracking-wide flex-wrap">
@@ -93,7 +93,7 @@ export const BrandHeader: React.FC<{
           onClick={onHomeClick}
           className="flex items-center gap-2 sm:gap-3 cursor-pointer group min-w-0"
         >
-          <div className="w-8 h-8 xs:w-9 xs:h-9 sm:w-[44px] sm:h-[44px] rounded-xl bg-[#005B46] flex items-center justify-center text-white shadow-xs group-hover:bg-[#004d3b] transition-colors flex-shrink-0">
+          <div className="w-8 h-8 xs:w-9 xs:h-9 sm:w-[44px] sm:h-[44px] rounded-xl bg-[#504CB8] flex items-center justify-center text-white shadow-xs group-hover:bg-[#403C95] transition-colors flex-shrink-0">
             <Building2 className="w-4 h-4 sm:w-5 sm:h-5 text-amber-300" />
           </div>
           <div className="min-w-0">
@@ -520,7 +520,7 @@ export const AuthPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-[100dvh] w-full max-w-full overflow-x-hidden bg-[#F7F6F1] text-[#1E2523] flex flex-col antialiased selection:bg-emerald-100 selection:text-emerald-900 font-sans">
+    <div className="min-h-[100dvh] w-full max-w-full overflow-x-hidden bg-[#F7F6FF] text-[#23213B] flex flex-col antialiased selection:bg-violet-100 selection:text-violet-900 font-sans">
       {/* 1. TOP GOVERNMENT BAR (28-30px, #005B46) */}
       <GovernmentBar
         onVerifyClick={() => navigate('verify_public', { certId: 'NCCT-CERT-2026-VAM-0089' })}

@@ -8,34 +8,17 @@ export default {
     extend: {
       colors: {
         govTeal: {
-          50: '#EAF6F1',
-          100: '#D5EDDF',
-          200: '#ACDCBF',
-          300: '#83CA9F',
-          400: '#34A868',
-          500: '#148C58',
-          600: '#0B6E4F', // Primary Gov Teal
-          700: '#08553D',
-          800: '#053C2B',
-          900: '#032319',
+          50: '#F0F0FF', 100: '#E1E0FF', 200: '#C8C7FF', 300: '#A7A5FF',
+          400: '#8683F7', 500: '#6865D9', 600: '#504CB8', 700: '#403C95',
+          800: '#302D70', 900: '#201E4D',
         },
         saffron: {
-          50: '#FDF6ED',
-          100: '#FBECDA',
-          200: '#F7DAB5',
-          300: '#F3C790',
-          400: '#EEA247',
-          500: '#E68A2E', // Accent Saffron
-          600: '#C76F1D',
-          700: '#9B5414',
-          800: '#6F3A0B',
+          50: '#FFF0F2', 100: '#FFDDE1', 200: '#FFC2CA', 300: '#FF9AA7',
+          400: '#F76C7D', 500: '#E34D63', 600: '#C73750', 700: '#9F2941', 800: '#762033',
         },
-        govBg: '#F7F5F0', // Civic off-white
+        govBg: '#F7F6FF',
         govText: {
-          primary: '#1E2523',
-          secondary: '#5B6660',
-          muted: '#8A9791',
-          border: '#DCE4DF',
+          primary: '#23213B', secondary: '#625F7D', muted: '#9290AA', border: '#E1E0EF',
         },
         govSuccess: '#2E8B57',
         govWarning: '#D9822B',
