@@ -545,14 +545,11 @@ export const AuthPage: React.FC = () => {
           {/* Saffron halo glow behind the elderly farmer */}
           <div className="absolute top-[20px] sm:top-[30px] left-[50%] md:left-[52%] xl:left-[50%] -translate-x-1/2 w-[260px] sm:w-[320px] h-[260px] sm:h-[320px] rounded-full bg-gradient-to-tr from-[#E98A28]/25 via-[#F59E0B]/15 to-transparent blur-2xl -z-10" />
 
-          {/* People photograph from custom background folder */}
+          {/* Contemporary learning photograph from the VikasSetu image library */}
           <img
-            src="/bg/Bg.png"
-            onError={(e) => {
-              e.currentTarget.src = '/hero_people.jpg';
-            }}
-            alt="Cooperative background"
-            className="w-full h-full object-cover object-[60%_15%] sm:object-[58%_16%] lg:object-[56%_16%] xl:object-[54%_16%] opacity-20 sm:opacity-35 md:opacity-95 filter contrast-[1.03]"
+            src="/img/coaching.webp"
+            alt="Cooperative learners participating in a training programme"
+            className="w-full h-full object-cover object-[62%_50%] opacity-20 sm:opacity-35 md:opacity-95 filter contrast-[1.03]"
           />
 
           {/* Desktop Soft White/Cream Gradient Overlay from LEFT -> CENTER */}

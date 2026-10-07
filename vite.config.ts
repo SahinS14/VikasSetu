@@ -37,10 +37,10 @@ export default defineConfig({
         navigateFallbackDenylist: [/^\/api\//, /^\/verify\/.+/],
         // Runtime caching strategies
         runtimeCaching: [
-          // Local hero / background images (top-level jpg + bg/ PNGs)
+          // Local VikasSetu image library and background images
           // CacheFirst: cached on first load, served from cache forever after
           {
-            urlPattern: /\/(?:hero_|sahakar_|bg\/).+\.(jpg|jpeg|png)$/i,
+            urlPattern: /\/(?:hero_|sahakar_|bg\/|img\/).+\.(jpg|jpeg|png|webp|avif)$/i,
             handler: 'CacheFirst',
             options: {
               cacheName: 'local-images',
