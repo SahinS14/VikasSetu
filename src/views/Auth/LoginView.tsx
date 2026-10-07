@@ -732,6 +732,30 @@ export const AuthPage: React.FC = () => {
                 <p className="text-[11px] text-gray-500 font-medium mt-1 leading-none truncate">Connected Journey</p>
               </div>
             </div>
+
+            {/* VikasSetu in the field — uses the supplied image library */}
+            <div className="w-full max-w-[590px] mt-5">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-[10px] font-bold tracking-[0.14em] text-[#504CB8] uppercase">VikasSetu in the field</p>
+                <span className="text-[10px] text-[#536A65] font-medium">Learning • livelihoods • inclusion</span>
+              </div>
+              <div className="grid grid-cols-5 gap-2">
+                {[
+                  { src: '/img/images.jpeg', alt: 'School learners participating in class', label: 'Learn' },
+                  { src: '/img/6569866a7167f.png', alt: 'Cooperative members at a training event', label: 'Connect' },
+                  { src: '/img/rb4y75.jpg', alt: 'Rural woman entrepreneur', label: 'Include' },
+                  { src: '/img/indian-farmer-sugarcane-field_23-2151996287.avif', alt: 'Indian farmer in a sugarcane field', label: 'Empower' },
+                  { src: '/img/male-worker-factory_1303-14306.avif', alt: 'Skilled worker operating machinery', label: 'Advance' },
+                ].map((image) => (
+                  <figure key={image.src} className="group relative h-[68px] sm:h-[76px] overflow-hidden rounded-xl border border-white/80 bg-white shadow-xs">
+                    <img src={image.src} alt={image.alt} loading="lazy" className="h-full w-full object-cover transition-transform duration-300 ease-out group-hover:scale-105" />
+                    <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#201E4D]/80 to-transparent px-1.5 pb-1.5 pt-5 text-[9px] font-bold text-white opacity-90">
+                      {image.label}
+                    </figcaption>
+                  </figure>
+                ))}
+              </div>
+            </div>
           </div>
 
           {/* ---------------------------------------------------------------
