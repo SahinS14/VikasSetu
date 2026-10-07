@@ -7,14 +7,22 @@
     <title>VikasSetu — Integrated Cooperative Training &amp; Employment Platform</title>
     <meta name="description" content="Integrated Cooperative Training &amp; Employment Platform." />
 
-    <!-- PWA manifest & theme -->
-    <link rel="manifest" href="/manifest.webmanifest" />
-    <meta name="theme-color" content="#0B6E4F" />
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="VikasSetu" />
-    <link rel="apple-touch-icon" href="/icon-192.png" />
+    <meta name="theme-color" content="#504CB8" />
+
+    <script>
+      // The application no longer ships as a PWA. Retire any older
+      // service worker and its cached bundles so visitors get the current UI.
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.getRegistrations().then((registrations) =>
+            Promise.all(registrations.map((registration) => registration.unregister())),
+          );
+          if ('caches' in window) {
+            caches.keys().then((keys) => Promise.all(keys.map((key) => caches.delete(key))));
+          }
+        });
+      }
+    </script>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
