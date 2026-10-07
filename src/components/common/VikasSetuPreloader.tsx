@@ -10,39 +10,69 @@ export const VikasSetuPreloader: React.FC<{ children: React.ReactNode }> = ({ ch
       return true;
     }
   });
+  const [hasEntered, setHasEntered] = useState(false);
   const [isLeaving, setIsLeaving] = useState(false);
 
   const finish = () => {
+    if (isLeaving) return;
     setIsLeaving(true);
     window.setTimeout(() => {
       try { sessionStorage.setItem(PRELOADER_KEY, 'true'); } catch {}
       setIsVisible(false);
-    }, 260);
+    }, 250);
   };
 
   useEffect(() => {
     if (!isVisible) return;
-    const timeout = window.setTimeout(finish, 11000);
-    return () => window.clearTimeout(timeout);
+
+    const frame = window.requestAnimationFrame(() => setHasEntered(true));
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') finish();
+    };
+    window.addEventListener('keydown', onKeyDown);
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener('keydown', onKeyDown);
+    };
   }, [isVisible]);
 
-  if (!isVisible) return <>{children}</>;
-
   return (
-    <section
-      aria-label="VikasSetu introduction video"
-      className={`fixed inset-0 z-[2000] overflow-hidden bg-black transition-[opacity,transform] duration-[260ms] [transition-timing-function:cubic-bezier(0.23,1,0.32,1)] ${isLeaving ? 'scale-[1.01] opacity-0' : 'scale-100 opacity-100'}`}
-    >
-      <video
-        className="h-full w-full object-cover"
-        src="/img/vid.mp4"
-        autoPlay
-        muted
-        playsInline
-        preload="auto"
-        onEnded={finish}
-        aria-label="VikasSetu introduction"
-      />
-    </section>
+    <>
+      {children}
+      {isVisible && (
+        <section
+          aria-label="VikasSetu introduction video"
+          aria-modal="true"
+          role="dialog"
+          className={`fixed inset-0 z-[2000] grid place-items-center bg-slate-950/55 p-4 backdrop-blur-sm transition-opacity duration-[250ms] [transition-timing-function:cubic-bezier(0.23,1,0.32,1)] ${isLeaving ? 'opacity-0' : 'opacity-100'}`}
+          onClick={finish}
+        >
+          <div
+            className={`relative w-full max-w-4xl overflow-hidden rounded-2xl bg-black shadow-2xl transition-[opacity,transform] duration-[250ms] [transition-timing-function:cubic-bezier(0.23,1,0.32,1)] motion-reduce:transition-opacity ${hasEntered && !isLeaving ? 'scale-100 opacity-100 motion-reduce:transform-none' : 'scale-[0.96] opacity-0 motion-reduce:transform-none'}`}
+            onClick={(event) => event.stopPropagation()}
+          >
+            <video
+              className="block aspect-video w-full"
+              src="/img/vid.mp4"
+              controls
+              muted={false}
+              playsInline
+              preload="metadata"
+              onEnded={finish}
+              aria-label="VikasSetu introduction"
+            />
+            <button
+              type="button"
+              onClick={finish}
+              aria-label="Close introduction video"
+              className="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-full bg-black/70 text-xl leading-none text-white transition-colors duration-150 hover:bg-black focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+            >
+              ×
+            </button>
+          </div>
+        </section>
+      )}
+    </>
   );
 };
