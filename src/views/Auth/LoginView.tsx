@@ -547,7 +547,7 @@ export const AuthPage: React.FC = () => {
 
           {/* Contemporary learning photograph from the VikasSetu image library */}
           <img
-            src="/img/coaching.webp"
+            src="/img/coaching.jpg"
             alt="Cooperative learners participating in a training programme"
             className="w-full h-full object-cover object-[62%_50%] opacity-20 sm:opacity-35 md:opacity-95 filter contrast-[1.03]"
           />
