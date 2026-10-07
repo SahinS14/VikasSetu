@@ -539,11 +539,12 @@ export const AuthPage: React.FC = () => {
         {/* =================================================================
             HERO BACKGROUND VISUAL LAYER (Spans broadly behind hero & center)
             Layer 0: Background Image (z-0)
-            Layer 1: Soft Ivory Multi-Stop Gradient Mask (z-1)
+            Layer 1: Soft lilac gradient mask (z-1)
            ================================================================= */}
         <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden select-none">
-          {/* Saffron halo glow behind the elderly farmer */}
-          <div className="absolute top-[20px] sm:top-[30px] left-[50%] md:left-[52%] xl:left-[50%] -translate-x-1/2 w-[260px] sm:w-[320px] h-[260px] sm:h-[320px] rounded-full bg-gradient-to-tr from-[#E98A28]/25 via-[#F59E0B]/15 to-transparent blur-2xl -z-10" />
+          {/* Violet and coral ambient light behind the coaching image */}
+          <div className="absolute top-[20px] sm:top-[30px] left-[50%] md:left-[52%] xl:left-[50%] -translate-x-1/2 w-[320px] sm:w-[420px] h-[320px] sm:h-[420px] rounded-full bg-gradient-to-tr from-[#504CB8]/25 via-[#F76C7D]/15 to-transparent blur-3xl -z-10" />
+          <div className="absolute -left-16 bottom-0 h-52 w-52 rounded-full bg-[#A7A5FF]/25 blur-3xl" />
 
           {/* Contemporary learning photograph from the VikasSetu image library */}
           <img
@@ -552,37 +553,37 @@ export const AuthPage: React.FC = () => {
             className="w-full h-full object-cover object-[62%_50%] opacity-20 sm:opacity-35 md:opacity-95 filter contrast-[1.03]"
           />
 
-          {/* Desktop Soft White/Cream Gradient Overlay from LEFT -> CENTER */}
+          {/* Desktop lilac gradient keeps the story legible while retaining the photograph */}
           <div
             className="hidden md:block absolute inset-0 pointer-events-none"
             style={{
               background: `linear-gradient(
                 90deg,
-                rgba(247,246,241,0.98) 0%,
-                rgba(247,246,241,0.88) 28%,
-                rgba(247,246,241,0.45) 48%,
-                rgba(247,246,241,0.05) 72%,
-                rgba(247,246,241,0.15) 86%,
-                rgba(247,246,241,0.45) 100%
+                rgba(247,246,255,0.99) 0%,
+                rgba(247,246,255,0.91) 28%,
+                rgba(247,246,255,0.50) 48%,
+                rgba(247,246,255,0.08) 72%,
+                rgba(232,230,255,0.18) 86%,
+                rgba(247,246,255,0.60) 100%
               )`
             }}
           />
 
-          {/* Mobile Soft Cream Gradient Overlay (Ensures perfect text readability while showing people) */}
+          {/* Mobile lilac overlay ensures perfect text readability */}
           <div
             className="md:hidden absolute inset-0 pointer-events-none"
             style={{
               background: `linear-gradient(
                 180deg,
-                rgba(247,246,241,0.95) 0%,
-                rgba(247,246,241,0.86) 35%,
-                rgba(247,246,241,0.93) 70%,
-                rgba(247,246,241,0.98) 100%
+                rgba(247,246,255,0.96) 0%,
+                rgba(247,246,255,0.88) 35%,
+                rgba(247,246,255,0.94) 70%,
+                rgba(247,246,255,0.99) 100%
               )`
             }}
           />
-          <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#F7F6F1] via-[#F7F6F1]/75 to-transparent pointer-events-none" />
-          <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-[#F7F6F1] to-transparent pointer-events-none opacity-80" />
+          <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#F7F6FF] via-[#F7F6FF]/75 to-transparent pointer-events-none" />
+          <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-[#F7F6FF] to-transparent pointer-events-none opacity-80" />
 
           {/* VikasSetu promise */}
           <div className="absolute top-[22px] left-[42%] xl:left-[45%] text-left z-10 pointer-events-none hidden lg:block">
