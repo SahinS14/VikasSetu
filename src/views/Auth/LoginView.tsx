@@ -584,20 +584,20 @@ export const AuthPage: React.FC = () => {
           <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#F7F6F1] via-[#F7F6F1]/75 to-transparent pointer-events-none" />
           <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-[#F7F6F1] to-transparent pointer-events-none opacity-80" />
 
-          {/* Slogan floating above farmer head, to the left of login card so it never gets covered */}
+          {/* VikasSetu promise */}
           <div className="absolute top-[22px] left-[42%] xl:left-[45%] text-left z-10 pointer-events-none hidden lg:block">
             <p className="font-serif italic text-[18px] lg:text-[20px] font-bold text-[#073D32] leading-[1.12] drop-shadow-xs whitespace-nowrap">
-              Stronger Cooperatives<br />
-              <span className="text-[#005B46]">Brighter Tomorrow</span>
+              Learn with purpose.<br />
+              <span className="text-[#005B46]">Grow with confidence.</span>
             </p>
             <div className="w-20 h-[3px] bg-[#E98A28] rounded-full mt-1" />
           </div>
 
-          {/* Small Sahakar se Samriddhi floating chip */}
+          {/* VikasSetu value chip */}
           <div className="absolute bottom-[36px] left-[42%] lg:left-[45%] bg-white/95 backdrop-blur-xs border border-[#DDE6DF] px-3 py-1 rounded-full shadow-2xs flex items-center gap-1.5 z-10 hidden xl:flex">
             <span className="w-2 h-2 rounded-full bg-[#005B46]" />
             <span className="text-[10px] font-bold text-[#005B46] font-devanagari">
-              सहकार से समृद्धि
+              कौशल • विश्वास • अवसर
             </span>
           </div>
         </div>
@@ -619,7 +619,7 @@ export const AuthPage: React.FC = () => {
             <div className="inline-flex items-center h-[28px] px-3 rounded-full bg-white border border-[#DDE6DF] shadow-2xs mb-3 max-w-full">
               <span className="w-3.5 h-1 rounded-full bg-[#E98A28] mr-2 flex-shrink-0" />
               <span className="text-[10.5px] xs:text-[11px] sm:text-[12px] font-bold text-[#005B46] tracking-wider uppercase truncate">
-                COOPERATIVES BUILD A STRONGER INDIA
+                VIKASSETU • TRAINING TO EMPLOYMENT
               </span>
             </div>
 
@@ -627,7 +627,7 @@ export const AuthPage: React.FC = () => {
             <div className="hero-heading min-h-[70px] xs:min-h-[82px] sm:min-h-[105px] lg:min-h-[115px] flex items-center md:items-start justify-center md:justify-start w-full">
               <h1 className="text-[28px] xs:text-[32px] sm:text-[40px] md:text-[36px] lg:text-[48px] xl:text-[52px] font-[800] text-[#073D32] tracking-tight leading-[1.08] sm:leading-[1.02] text-center md:text-left break-words">
                 <TextType
-                  text={"Empowering India's\nसहकारी Workforce"}
+                  text={"Training that opens\nreal opportunities"}
                   typingSpeed={55}
                   deletingSpeed={25}
                   pauseDuration={1800}
@@ -642,8 +642,8 @@ export const AuthPage: React.FC = () => {
 
             {/* Description: full width, readable, responsive padding */}
             <p className="mt-[12px] sm:mt-[14px] text-[14px] sm:text-[15px] md:text-[14px] lg:text-[16px] text-[#536A65] leading-[1.45] max-w-[560px] text-center md:text-left px-1 sm:px-0">
-              A unified digital platform connecting 20 NCCT institutions, 63,000+ digitized PACS,
-              and national cooperative employers for training, certification and better opportunities.
+              VikasSetu brings cooperative learners, institutes and employers onto one trusted platform for
+              training, attendance, verified credentials and career pathways.
             </p>
 
             {/* Feature Cards: 2x2 Grid on Mobile & Tablet, 4-col single row on Desktop */}
@@ -663,8 +663,8 @@ export const AuthPage: React.FC = () => {
                   <BadgeCheck className="w-3.5 h-3.5" />
                 </div>
                 <div className="min-w-0 text-left">
-                  <p className="text-[11px] sm:text-[12px] font-bold text-[#073D32] uppercase leading-none">GET CERTIFIED</p>
-                  <p className="text-[10px] text-[#536A65] mt-0.5 leading-tight truncate">Verifiable credentials</p>
+                  <p className="text-[11px] sm:text-[12px] font-bold text-[#073D32] uppercase leading-none">VERIFY</p>
+                  <p className="text-[10px] text-[#536A65] mt-0.5 leading-tight truncate">Trusted credentials</p>
                 </div>
               </div>
 
@@ -673,8 +673,8 @@ export const AuthPage: React.FC = () => {
                   <UsersRound className="w-3.5 h-3.5" />
                 </div>
                 <div className="min-w-0 text-left">
-                  <p className="text-[11px] sm:text-[12px] font-bold text-[#073D32] uppercase leading-none">GROW</p>
-                  <p className="text-[10px] text-[#536A65] mt-0.5 leading-tight truncate">Skills for future</p>
+                  <p className="text-[11px] sm:text-[12px] font-bold text-[#073D32] uppercase leading-none">CONNECT</p>
+                  <p className="text-[10px] text-[#536A65] mt-0.5 leading-tight truncate">People & institutes</p>
                 </div>
               </div>
 
@@ -683,8 +683,8 @@ export const AuthPage: React.FC = () => {
                   <BriefcaseBusiness className="w-3.5 h-3.5" />
                 </div>
                 <div className="min-w-0 text-left">
-                  <p className="text-[11px] sm:text-[12px] font-bold text-[#073D32] uppercase leading-none">GET HIRED</p>
-                  <p className="text-[10px] text-[#536A65] mt-0.5 leading-tight truncate">Direct opportunities</p>
+                  <p className="text-[11px] sm:text-[12px] font-bold text-[#073D32] uppercase leading-none">ADVANCE</p>
+                  <p className="text-[10px] text-[#536A65] mt-0.5 leading-tight truncate">Career pathways</p>
                 </div>
               </div>
             </div>
@@ -697,16 +697,16 @@ export const AuthPage: React.FC = () => {
                 <p className="text-[10.5px] text-gray-500 font-medium mt-1 leading-none">Institutions</p>
               </div>
               <div className="bg-white border border-[#E0E6E2] rounded-[14px] p-2.5 text-center shadow-2xs">
-                <p className="text-[18px] font-extrabold text-[#073D32] leading-none">63,000+</p>
-                <p className="text-[10.5px] text-gray-500 font-medium mt-1 leading-none">Digitized PACS</p>
+                <p className="text-[18px] font-extrabold text-[#073D32] leading-none">7</p>
+                <p className="text-[10.5px] text-gray-500 font-medium mt-1 leading-none">Role Workspaces</p>
               </div>
               <div className="bg-white border border-[#E0E6E2] rounded-[14px] p-2.5 text-center shadow-2xs">
-                <p className="text-[18px] font-extrabold text-[#073D32] leading-none">1M+</p>
-                <p className="text-[10.5px] text-gray-500 font-medium mt-1 leading-none">Trained Members</p>
+                <p className="text-[18px] font-extrabold text-[#073D32] leading-none">3</p>
+                <p className="text-[10.5px] text-gray-500 font-medium mt-1 leading-none">Languages</p>
               </div>
               <div className="bg-white border border-[#E0E6E2] rounded-[14px] p-2.5 text-center shadow-2xs">
-                <p className="text-[18px] font-extrabold text-[#073D32] leading-none">500+</p>
-                <p className="text-[10.5px] text-gray-500 font-medium mt-1 leading-none">Employer Partners</p>
+                <p className="text-[18px] font-extrabold text-[#073D32] leading-none">1</p>
+                <p className="text-[10.5px] text-gray-500 font-medium mt-1 leading-none">Connected Journey</p>
               </div>
             </div>
 
@@ -718,18 +718,18 @@ export const AuthPage: React.FC = () => {
               </div>
 
               <div className="px-2 md:px-1.5 lg:px-2.5 text-center flex-1">
-                <p className="text-[18px] md:text-[18px] lg:text-[20px] font-extrabold text-[#073D32] leading-none">63,000+</p>
-                <p className="text-[11px] text-gray-500 font-medium mt-1 leading-none truncate">Digitized PACS</p>
+                <p className="text-[18px] md:text-[18px] lg:text-[20px] font-extrabold text-[#073D32] leading-none">7</p>
+                <p className="text-[11px] text-gray-500 font-medium mt-1 leading-none truncate">Role Workspaces</p>
               </div>
 
               <div className="px-2 md:px-1.5 lg:px-2.5 text-center flex-1">
-                <p className="text-[18px] md:text-[18px] lg:text-[20px] font-extrabold text-[#073D32] leading-none">1M+</p>
-                <p className="text-[11px] text-gray-500 font-medium mt-1 leading-none truncate">Trained Members</p>
+                <p className="text-[18px] md:text-[18px] lg:text-[20px] font-extrabold text-[#073D32] leading-none">3</p>
+                <p className="text-[11px] text-gray-500 font-medium mt-1 leading-none truncate">Languages</p>
               </div>
 
               <div className="px-2 md:px-1.5 lg:px-2.5 text-center flex-1 last:pr-0">
-                <p className="text-[18px] md:text-[18px] lg:text-[20px] font-extrabold text-[#073D32] leading-none">500+</p>
-                <p className="text-[11px] text-gray-500 font-medium mt-1 leading-none truncate">Employer Partners</p>
+                <p className="text-[18px] md:text-[18px] lg:text-[20px] font-extrabold text-[#073D32] leading-none">1</p>
+                <p className="text-[11px] text-gray-500 font-medium mt-1 leading-none truncate">Connected Journey</p>
               </div>
             </div>
           </div>
